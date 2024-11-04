@@ -123,7 +123,7 @@
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
-
+    
             try {
                 const response = await fetch(`/${userType}/signup`, {
                     method: 'POST',
@@ -132,17 +132,18 @@
                     },
                     body: JSON.stringify({ phone, password })
                 });
-
+    
                 const data = await response.json();
-
+    
                 if (response.ok) {
-                    alert('회원가입 성공! 로그인 해주세요.');
-                    window.location.href = '/'; // 로그인 페이지로 리다이렉트
+                    alert(data.message);
+                    window.location.href = data.redirectUrl;
                 } else {
                     errorMessage.textContent = data.message;
                     errorMessage.style.display = 'block';
                 }
             } catch (error) {
+                console.error('Signup error:', error);
                 errorMessage.textContent = '서버 오류가 발생했습니다.';
                 errorMessage.style.display = 'block';
             }

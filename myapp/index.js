@@ -42,8 +42,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: { 
-        secure: false,  // HTTPS를 사용하지 않을 경우 false
-        maxAge: 24 * 60 * 60 * 1000 // 24시간
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000
     }
 }));
 

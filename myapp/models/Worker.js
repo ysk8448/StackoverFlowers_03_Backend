@@ -10,7 +10,7 @@ const workerSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
 }, {
     timestamps: true
 });
@@ -32,6 +32,7 @@ workerSchema.pre('save', async function(next) {
 workerSchema.methods.comparePassword = async function(candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
+
 
 const Worker = mongoose.model('Worker', workerSchema);
 export default Worker;

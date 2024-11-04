@@ -43,4 +43,32 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// 회원가입
+router.post('/signup', async (req, res) => {
+    try {
+        const { phone, password } = req.body;
+        
+        // 기존 사용자 확인
+        const existingWorker = await Worker.findOne({ phone });
+        if (existingWorker) {
+            return res.status(400).json({ 
+                message: "이미 존재하는 회원입니다" 
+            });
+        }
+
+        // 새 사용자 생성
+        const worker = new Worker({ phone, password });
+        await worker.save();
+
+        res.status(201).json({ 
+            message: "회원가입 성공! 로그인 해주세요.",
+            redirectUrl: '/'
+        });
+    } catch (error) {
+        console.error('Signup error:', error);
+        res.status(500).json({ message: "서버 오류가 발생했습니다." });
+    }
+});
+
+ 
 export default router;
