@@ -1,1 +1,4 @@
 node_modules
+# .gitignore 파일 생성
+echo "Team/" >> .gitignore
+echo "private/" >> .gitignore
