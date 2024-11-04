@@ -34,12 +34,63 @@ router.post('/create', async (req, res) => {
 });
 
 
+
+// 이벤트 수정  (GET /events/edit/:id)
+router.get('/edit/:id', async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+        res.render('eventEdit', { event }); // editEvent 템플릿 렌더링
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to load event for editing');
+    }
+});
+
+// 이벤트 수정 (POST /events/edit/:id)
+router.post('/edit/:id', async (req, res) => {
+    const { title, start, end, description, allDay } = req.body; // 수정된 데이터 가져오기
+    try {
+        const updatedEvent = await Event.findByIdAndUpdate(
+            req.params.id,
+            { title, start, end, description, allDay },
+            { new: true } // 수정 후 업데이트된 데이터를 반환
+        );
+        if (!updatedEvent) {
+            return res.status(404).send('Event not found');
+        }
+        console.log('Event updated successfully');
+        res.redirect('/'); // 수정 후 메인 페이지로 리디렉션
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to update event');
+    }
+});
+
+
+
+// 이벤트 삭제 (POST /events/delete/:id)
+router.post('/delete/:id', async (req, res) => {
+    try {
+        await Event.deleteOne({ _id: req.params.id }); // 이벤트 삭제
+        console.log('Event deleted successfully');
+        res.redirect('/'); // 삭제 후 메인 페이지로 리디렉션
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to delete event');
+    }
+});
+
+
 // 이벤트 조회 API
 router.get('/all', async (req, res) => {
     try {
         const events = await Event.find({});
     // FullCalendar 형식에 맞게 데이터 가공
         const formattedEvents = events.map(event => ({
+            id: event._id,
             title: event.title,
             start: event.start,
             end: event.end,
